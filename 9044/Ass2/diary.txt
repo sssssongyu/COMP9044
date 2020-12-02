@@ -1,0 +1,13 @@
+Data		Start	Stop	Activity	Comments
+04/08/20	11:00	13:12	Reading		Understanding the content of this assignment
+04/08/20	14:00	14:47	Coding		Coding subset 0
+04/08/20	15:00	16:30	Coding		Coding subset 1
+05/08/20	12:10	16:20	Coding		Coding subset 2
+05/08/20 	18:00	20:00	Debugging	Add more details through autotest
+06/08/20	10:00	14:00	Coding		Coding subset 3
+06/08/20	16:20	19:30	Debugging	Adjust details
+07/08/20	12:10	16:20	Debugging	Focus on handling quotes
+08/08/20	10:00	12:00	Coding		Coding subset 4
+08/08/20	13:30	17:10	Coding 		Coding subset 4
+09/08/20	12:10	18:00	Coding		Coding shell scripts
+09/08/20 	18:30	21:50	Debugging	add more details

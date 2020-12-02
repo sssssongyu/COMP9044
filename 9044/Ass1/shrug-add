@@ -1,0 +1,44 @@
+#!/bin/dash
+
+if [ ! -d ./.shrug ]; then
+    echo "shrug-add: error: no .shrug directory containing shrug repository exists"
+
+elif [ "$#" -le 0 ]; then
+    echo "shrug-add <filenames>"
+
+else
+
+    if [ -d ./.shrug/index ]; then
+
+        for test in "$@"; do
+            if [ -f $test ]; then
+                cp "$test" '.shrug/index/'$test''
+
+            else
+                if [ -f ./.shrug/index/$test ]; then
+                    rm ".shrug/index/$test"
+                else
+                    echo "shrug-add: error: can not open '$test'"
+                fi
+            fi
+        done
+
+    else
+
+        for test in "$@"; do
+            if [ ! -f $test ]; then
+                echo "shrug-add: error: can not open '$test'"
+                exit
+            fi
+        done
+
+        mkdir ./.shrug/index
+
+        for file in "$@"; do
+            if echo $file | egrep -q "^[a-zA-Z0-9]*[.-_a-zA-Z0-9]*$"; then
+                cp "$file" '.shrug/index/'$file''
+            fi
+        done
+
+    fi
+fi

@@ -1,0 +1,52 @@
+{\rtf1\ansi\ansicpg936\cocoartf2512
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fnil\fcharset0 Menlo-Regular;\f2\fnil\fcharset134 PingFangSC-Regular;
+}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red251\green0\blue7;}
+{\*\expandedcolortbl;;\csgray\c0;\cssrgb\c100000\c12195\c0;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww14040\viewh8400\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 1. 
+\f1\fs22 \cf2 \CocoaLigature0 egrep 'lmn' dictionary.txt\
+2.egrep 'zz' dictionary.txt | egrep -v "'s$"\
+3.egrep -i '[a,e,i,o,u][a,e,i,o,u][a,e,i,o,u][a,e,i,o,u]' dictionary.txt\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+egrep -i '[aeiou]\{4\}' dictionary.txt\
+\
+4.egrep -i 'a.*e.*i.*o.*u' dictionary.txt\
+5.egrep -i '^[^aeiou]*a[^aeiou]*e[^aeiou]*i[^aeiou]*o[^aeiou]*u[^aeiou]*$' dictionary.txt\
+\
+\
+1.egrep 'Member for W' parliament.txt \
+2.egrep '(Dr|Hon|Mr|Mrs|Ms)+ Andrew' parliament.txt \
+
+\f2 \cf3 egrep \'a1\'aeAndrew .+:\'a1\'af parliament.txt
+\f1 \cf2 \
+\
+3.egrep -i '(Dr|Hon|Mr|Mrs|Ms)+ .*+ .*ll+(:| [a-z]*:)' parliament.txt\
+\cf3 egrep 'll(:| [A-Z]*:)' parliament.txt\cf2  \
+\
+4.egrep '.*y:.*y,' parliament.txt\
+egrep -i '(Dr|Hon|Mr|Mrs|Ms)+ .*+ .*y+(:| [a-z]*:)+.*y,' parliament.txt\
+\cf3 egrep 'y(:| [A-Z]*:).*y,' parliament.txt\cf2 \
+\
+5.egrep -i '(Dr|Hon|Mr|Mrs|Ms)+ .*+ .*y+(:| [a-z]*:)|.*y,' parliament.txt\
+\cf3 egrep 'y(:| [A-Z]*:)|y,' parliament.txt\cf2 \
+\
+6.egrep -i '(Dr|Hon|Mr|Mrs|Ms)+ .*+ .*ng+(:| [a-z]*:)|.*ng,' parliament.txt\
+\cf3 egrep 'ng(:| [A-Z]*:)|ng,' parliament.txt\cf2  \
+\
+
+\f2 7.
+\f1 egrep -i '(Dr|Hon|Mr|Mrs|Ms)+ .*+ [aeiou].*[aeiou]+(:| [a-z]*:)' parliament.txt\
+8.egrep 'Member for (.* .*,|.*-.*,)' parliament.txt \
+9.cat parliament.txt | cut -d "," -f2 | sort | uniq -c | sort\
+10.cat parliament.txt | cut -d " " -f2 | sort | uniq -c | sort -r | sed -n -e '2,2p' | sed 's/.* //\'91A.*\
+\cf3  cat parliament.txt | sed 's/ Dr //' | cut -d " " -f2 | sort | uniq -c | sort -r | sed -n -e '2,2p' | sed 's/.* //'\cf2 \
+\
+\
+1.egrep '(A.*B|B.*A)' input.txt\
+2.egrep -v \'92[^AB]\'92 input.txt| egrep -v 'BB.*AA'\
+3.egrep -v \'91[^AB]\'92 input.txt | egrep '^B*(AB*AB*AB*AB*)*$'\
+4.\
+}

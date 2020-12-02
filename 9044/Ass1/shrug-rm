@@ -1,0 +1,165 @@
+#!/bin/dash
+
+sign=""
+
+if [ ! -d "./.shrug" ]; then
+    echo shrug-rm: error: no .shrug directory containing shrug repository exists
+    exit
+elif [ ! -f "./.shrug/commit" ]; then
+    echo shrug-rm: error: your repository does not have any commits yet
+    exit
+
+elif [ $# -eq 0 ]; then
+    echo "usage: shrug-rm [--force] [--cached] <filenames>"
+    exit
+fi
+
+for filename in "$@"; do
+    if [ "$filename" = "--cached" -o "$filename" = "--force" ]; then
+        if [ "$sign" = "" ]; then
+            sign="$filename"
+        fi
+        continue
+    elif echo $filename | egrep -q -v "^[a-zA-Z0-9]+[.-_a-zA-Z0-9]*$"; then
+        echo "usage: shrug-rm [--force] [--cached] <filenames>"
+        exit
+    fi
+done
+if [ ! -f ".shrug/commit" ]; then
+    echo "shrug-rm: error: your repository does not have any commits yet"
+    exit
+fi
+#echo "$fname" | tr ' ' '\n' | while read filename
+if [ "$sign" = "--cached" ]; then
+    for filename in "$@"; do
+        if [ "$filename" != "--cached" -a "$filename" != "--force" ]; then
+            if [ ! -f ".shrug/index/$filename" ]; then
+                echo "shrug-rm: error: '$filename' is not in the shrug repository"
+                exit
+            fi
+        fi
+    done
+
+    for filename in "$@"; do
+        if [ "$filename" != "--cached" -a "$filename" != "--force" ]; then
+            if [ -f ".shrug/commit" ]; then
+                versionnum=$(wc -l <.shrug/commit)
+                versionnum=$((versionnum - 1))
+                if [ ! -f ".shrug/commit$versionnum/$filename" ]; then
+                    if [ -f "$filename" ]; then
+                        cmp=$(diff ".shrug/index/$filename" "$filename")
+                        if [ "$cmp" != "" ]; then
+                            echo "shrug-rm: error: '$filename' in index is different to both working file and repository"
+                            exit
+                        fi
+                    fi
+
+                else
+                    cmp=$(diff ".shrug/index/$filename" ".shrug/commit$versionnum/$filename")
+                    if [ "$cmp" != "" ]; then
+                        cmp1=$(diff ".shrug/index/$filename" "$filename")
+                        if [ "$cmp1" != "" ]; then
+                            echo "shrug-rm: error: '$filename' in index is different to both working file and repository"
+                            exit
+                        fi
+                    fi
+                fi
+            fi
+        fi
+
+    done
+
+    for filename in "$@"; do
+        if [ "$filename" != "--cached" -a "$filename" != "--force" ]; then
+            rm ".shrug/index/$filename"
+        fi
+    done
+
+elif [ "$sign" = "--force" ]; then
+    for filename in "$@"; do
+        if [ "$filename" != "--cached" -a "$filename" != "--force" ]; then
+            if [ ! -f ".shrug/index/$filename" ]; then
+                echo "shrug-rm: error: '$filename' is not in the shrug repository"
+                exit
+            fi
+        fi
+    done
+    current=0
+    for filename in "$@"; do
+        if [ "$filename" = "--cached" ]; then
+            current=1
+            break
+        fi
+    done
+    if [ $current -eq 0 ]; then
+        for filename in "$@"; do
+            if [ "$filename" != "--cached" -a "$filename" != "--force" ]; then
+                rm ".shrug/index/$filename"
+                if [ -f "$filename" ]; then
+                    rm "$filename"
+                fi
+            fi
+        done
+    else
+        for filename in "$@"; do
+            if [ "$filename" != "--cached" -a "$filename" != "--force" ]; then
+                rm ".shrug/index/$filename"
+            fi
+        done
+
+    fi
+
+else
+    for filename in "$@"; do
+        if [ "$filename" != "--cached" -a "$filename" != "--force" ]; then
+            if [ ! -f ".shrug/index/$filename" ]; then
+                echo "shrug-rm: error: '$filename' is not in the shrug repository"
+                exit
+            else
+                if [ -f "$filename" ]; then
+                    cmp=$(diff "$filename" ".shrug/index/$filename")
+                    if [ "$cmp" = "" ]; then
+                        versionnum=$(wc -l <.shrug/commit)
+                        versionnum=$((versionnum - 1))
+                        if [ -f ".shrug/commit$versionnum/$filename" ]; then
+                            cmpic=$(diff ".shrug/index/$filename" ".shrug/commit$versionnum/$filename")
+                            if [ "$cmpic" != "" ]; then
+                                echo "shrug-rm: error: '$filename' has changes staged in the index"
+                                exit
+                            fi
+                        else
+                            echo "shrug-rm: error: '$filename' has changes staged in the index"
+                            exit
+
+                        fi
+                    else
+                        versionnum=$(wc -l <.shrug/commit)
+                        versionnum=$((versionnum - 1))
+                        if [ -f ".shrug/commit$versionnum/$filename" ]; then
+                            cmpic=$(diff ".shrug/index/$filename" ".shrug/commit$versionnum/$filename")
+                            if [ "$cmpic" = "" ]; then
+                                echo "shrug-rm: error: '$filename' in repository is different to working file"
+                                exit
+                            else
+                                echo "shrug-rm: error: '$filename' in index is different to both working file and repository"
+                                exit
+                            fi
+                        else
+                            echo "shrug-rm: error: '$filename' in index is different to both working file and repository"
+                            exit
+                        fi
+                    fi
+                fi
+            fi
+        fi
+    done
+
+    for filename in "$@"; do
+        if [ "$filename" != "--cached" -a "$filename" != "--force" ]; then
+            rm ".shrug/index/$filename"
+            if [ -f "$filename" ]; then
+                rm "$filename"
+            fi
+        fi
+    done
+fi

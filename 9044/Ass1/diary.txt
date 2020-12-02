@@ -1,0 +1,10 @@
+Date		Start	Stop	Activity	Comments
+09/07/20	16:30   20:00	Coding		Understanding the structure of the assignment, and coding subsut0
+10/07/20	12:00	16:00	Debugging	Considering more detatil about "Shrug-commit" and debugging
+10/07/20	17:00	21:00	Debugging	Implemented commit functionality
+12/07/20	11:00	13:00	Debugging	Improvement subsut0
+12/07/20	14:00	20:00	Coding		Starting explore "Shrug-rm" and coding
+12/07/20	23:00	24:00	Debugging	Supple more detail about "Shrug-rm" and understanding "Shrug-status"
+13/07/20	09:30	12:00	Coding		Start coding "Shrug-status" and debugging
+15/07/20	09:05	12:00	Coding		Coding test scripts(0,1,2,3)
+15/07/20	13:00	18:20	Coding		Coding test scripts(4,5,6,7,8,9)

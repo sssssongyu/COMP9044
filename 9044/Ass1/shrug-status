@@ -1,0 +1,135 @@
+#!/bin/dash
+string1=""
+string2=""
+string3=""
+if [ "$(ls)" != "" ]; then
+    for file in *; do
+        string1="$string1$file "
+    done
+fi
+
+if [ "$(ls -A .shrug/index)" != "" ]; then
+    for file in .shrug/index/*; do
+        file=$(echo $file | cut -d"/" -f3)
+        samefile=0
+        for file1 in *; do
+            if [ "$file" = "$file1" ]; then
+                samefile=1
+                break
+            fi
+        done
+        if [ $samefile -eq 0 ]; then
+            string2="$string2$file "
+        fi
+    done
+    string2=$(echo $string2 | sed 's/ $//g')
+    string2="$string1 $string2"
+else
+    string2=$string1
+fi
+
+versionnum=$(wc -l <.shrug/commit)
+versionnum=$((versionnum - 1))
+if [ "$(ls -A .shrug/commit$versionnum)" != "" ]; then
+    for file in .shrug/commit$versionnum/*; do
+        file=$(echo $file | cut -d"/" -f3)
+        samefile=0
+        for file1 in $string2; do
+            if [ "$file" = "$file1" ]; then
+                samefile=1
+                break
+            fi
+        done
+        if [ $samefile -eq 0 ]; then
+            string3="$string3$file "
+        fi
+    done
+    files="$string2 $string3"
+    files=$(echo $files | sed 's/ $//g')
+else
+    files=$string2
+    files=$(echo $files | sed 's/ $//g')
+fi
+
+for file in $files; do
+
+    if [ -x "$file" ]; then
+        echo "$file - untracked"
+        continue
+
+    else
+        if [ -f ".shrug/index/$file" ]; then
+            if [ -f "$file" ]; then
+                cmp=$(diff ".shrug/index/$file" "$file")
+                if [ "$cmp" = "" ]; then
+                    versionnum=$(wc -l <.shrug/commit)
+                    versionnum=$((versionnum - 1))
+                    if [ -f ".shrug/commit$versionnum/$file" ]; then
+                        cmp1=$(diff ".shrug/index/$file" ".shrug/commit$versionnum/$file")
+                        if [ "$cmp1" = "" ]; then
+                            echo "$file - same as repo"
+                            continue
+                        else
+                            echo "$file - file changed, changes staged for commit"
+                            continue
+                        fi
+                    else
+                        echo "$file - added to index"
+                        continue
+                    fi
+                else
+                    versionnum=$(wc -l <.shrug/commit)
+                    versionnum=$((versionnum - 1))
+                    if [ -f ".shrug/commit$versionnum/$file" ]; then
+                        cmp1=$(diff ".shrug/index/$file" ".shrug/commit$versionnum/$file")
+                        if [ "$cmp1" = "" ]; then
+                            echo "$file - file changed, changes not staged for commit"
+                            continue
+                        else
+                            echo "$file - file changed, different changes staged for commit"
+                            continue
+                        fi
+                    else
+                        echo "$file - added to index, file changed"
+                        continue
+                    fi
+
+                fi
+            else
+                versionnum=$(wc -l <.shrug/commit)
+                versionnum=$((versionnum - 1))
+                if [ -f ".shrug/commit$versionnum/$file" ]; then
+                    cmp1=$(diff ".shrug/index/$file" ".shrug/commit$versionnum/$file")
+                    if [ "$cmp1" != "" ]; then
+                        echo "$file - file deleted, different changes staged for commit"
+                        continue
+                    else
+                        echo "$file - file deleted"
+                        continue
+                    fi
+                else
+                    echo "$file - added to index, file deleted"
+                    continue
+                fi
+            fi
+
+        else
+            if [ -f "$file" ]; then
+                echo "$file - untracked"
+                continue
+            else
+                versionnum=$(wc -l <.shrug/commit)
+                versionnum=$((versionnum - 1))
+                if [ -f ".shrug/commit$versionnum/$file" ]; then
+                    echo "$file - deleted"
+                    continue
+                else
+                    echo "$file - untracked"
+                    continue
+                fi
+            fi
+
+        fi
+    fi
+
+done | sort

@@ -1,0 +1,306 @@
+{\rtf1\ansi\ansicpg936\cocoartf2512
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fnil\fcharset0 Menlo-Regular;\f2\fnil\fcharset134 PingFangSC-Regular;
+}
+{\colortbl;\red255\green255\blue255;\red245\green255\blue236;\red122\green37\blue30;\red89\green138\blue67;
+\red23\green23\blue23;\red202\green202\blue202;\red183\green111\blue179;\red140\green211\blue254;\red212\green214\blue154;
+\red194\green126\blue101;\red205\green173\blue106;\red196\green83\blue86;\red255\green255\blue255;\red0\green0\blue0;
+\red88\green137\blue67;\red203\green203\blue202;\red184\green111\blue179;\red142\green213\blue255;\red212\green213\blue153;
+\red194\green125\blue100;\red197\green82\blue85;\red204\green172\blue105;\red203\green203\blue202;}
+{\*\expandedcolortbl;;\cspthree\c97325\c100000\c94660;\csgenericrgb\c47826\c14510\c11688\c85000;\cssrgb\c41569\c60000\c33333;
+\cssrgb\c11765\c11765\c11765;\cssrgb\c83137\c83137\c83137;\cssrgb\c77255\c52549\c75294;\cssrgb\c61176\c86275\c99608;\cssrgb\c86275\c86275\c66667;
+\cssrgb\c80784\c56863\c47059;\cssrgb\c84314\c72941\c49020;\cssrgb\c81961\c41176\c41176;\cssrgb\c100000\c100000\c100000;\cssrgb\c0\c0\c0;
+\cssrgb\c41436\c59847\c32956;\cssrgb\c83411\c83411\c83099;\cssrgb\c77483\c52772\c75312;\cssrgb\c61729\c86919\c100000;\cssrgb\c86232\c86184\c66253;
+\cssrgb\c80765\c56762\c46655;\cssrgb\c82022\c41140\c40832;\cssrgb\c84135\c72677\c48439;\cssrgb\c83320\c83320\c83112;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww10800\viewh16100\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 1.\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f1\fs30 \cf2 \cb3 \CocoaLigature0 #!/usr/bin/perl -w\
+\
+$count=0;\
+\
+while($line = <STDIN>)\{\
+if ($line =~ /^\\s*$/ )\
+\{\
+next;\
+\}\
+@line =split /[^a-zA-Z]+/, $line;\
+foreach $w(@line)\
+\{\
+if ( $w =~ /^[^a-zA-Z]*$/ )\
+\{\
+next;\
+\}\
+else\
+\{\
+$count=$count+1;\
+\}\
+\}\
+\}\
+\
+print("$count words\\n");
+\f0\fs24 \cf0 \cb1 \CocoaLigature1 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+\cf0 \
+2.\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f1\fs30 \cf2 \cb3 \CocoaLigature0 #!/usr/bin/perl -w\
+\
+$count=0;\
+$word=$ARGV[0];\
+while($line = <STDIN>)\{\
+if ($line =~ /^\\s*$/ )\
+\{\
+next;\
+\}\
+@line =split /[^a-zA-Z]+/, $line;\
+foreach $w(@line)\
+\{\
+if ( $w =~ /^$word$/i )\
+\{\
+$count=$count+1;\
+\}\
+\
+\}\
+\}\
+\
+print("$word occurred $count times\\n");\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 \cb1 \CocoaLigature1 \
+\
+3.\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f1\fs30 \cf2 \cb3 \CocoaLigature0 \
+#!/usr/bin/perl -w\
+\
+$word=$ARGV[0];\
+\
+foreach $file (glob "lyrics/*.txt") \{\
+        open $f, '<', $file or die;\
+$count=0;\
+$count1=0;\
+        while($line=<$f>)\
+\{\
+if ($line =~ /^\\s*$/ )\
+\{\
+next;\
+\}\
+@line =split /[^a-zA-Z]+/, $line;\
+foreach $w(@line)\
+\{\
+if ( $w =~ /^[a-zA-Z]+$/ )\
+\{\
+$count=$count+1;\
+if ( $w =~ /^$word$/i )\
+\{\
+$count1=$count1+1;\
+\}\
+\}\
+\}\
+\}\
+@filename=split /\\//, $file;\
+$ff=$filename[1];\
+$ff=~ s/\\.\\w*$//;\
+$ff=~ s/_/ /g;\
+printf "%4d/%6d = %.9f %s\\n",$count1,$count,$count1/$count,$ff;\
+close $f;\
+\}
+\f0\fs24 \cf0 \cb1 \CocoaLigature1 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+\cf0 \
+\
+4.\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f1\fs30 \cf2 \cb3 \CocoaLigature0 #!/usr/bin/perl -w\
+\
+$word=$ARGV[0];\
+\
+foreach $file (glob "lyrics/*.txt") \{\
+        open $f, '<', $file or die;\
+$count=0;\
+$count1=0;\
+        while($line=<$f>)\
+\{\
+\
+\{\
+\{\
+next;\
+\}\
+@line =split /[^a-zA-Z]+/, $line;\
+foreach $w(@line)\
+\{\
+if ( $w =~ /^[a-zA-Z]+$/ )\
+\{\
+$count=$count+1;\
+if ( $w =~ /^$word$/i )\
+\{\
+$count1=$count1+1;\
+\}\
+\}\
+\}\
+\}\
+@filename=split /\\//, $file;\
+$ff=$filename[1];\
+$ff=~ s/\\.\\w*$//;\
+$ff=~ s/_/ /g;\
+printf "log((%d+1)/%6d) = %8.4f %s\\n",$count1,$count,log(($count1+1)/$count),$ff;\
+close $f;\
+\}
+\f0\fs24 \cf0 \cb1 \CocoaLigature1 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+\cf0 \
+5.\
+\
+\pard\pardeftab720\sl360\partightenfactor0
+
+\f1 \cf4 \cb5 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec4 #!/usr/bin/perl -w\cf6 \cb1 \strokec6 \
+\
+\pard\pardeftab720\sl360\partightenfactor0
+\cf7 \cb5 \strokec7 foreach\cf6 \strokec6  \cf8 \strokec8 $file\cf6 \strokec6 (\cf8 \strokec8 @ARGV\cf6 \strokec6 )\cb1 \
+\pard\pardeftab720\sl360\partightenfactor0
+\cf6 \cb5 \{\cb1 \
+\cb5     \cf8 \strokec8 @contents\cf6 \strokec6 =[];\cb1 \
+\cb5     \cf8 \strokec8 @singer\cf6 \strokec6 =[];\cb1 \
+\cb5     \cf8 \strokec8 @data\cf6 \strokec6 =[];\cb1 \
+\cb5     \cf8 \strokec8 $count\cf6 \strokec6 =0;\cb1 \
+\cb5     \cf8 \strokec8 $count1\cf6 \strokec6 =0;\cb1 \
+\cb5     \cf9 \strokec9 print\cf6 \strokec6  \cf10 \strokec10 "\cf8 \strokec8 $file\cf11 \strokec11 \\n\cf10 \strokec10 "\cf6 \strokec6 ;\cb1 \
+\
+\cb5     \cf9 \strokec9 open\cf6 \strokec6  \cf8 \strokec8 $f\cf6 \strokec6 , \cf10 \strokec10 '<'\cf6 \strokec6 , \cf8 \strokec8 $file\cf6 \strokec6  or \cf7 \strokec7 die\cf6 \strokec6 ;\cb1 \
+\cb5     \cf7 \strokec7 while\cf6 \strokec6 (\cf8 \strokec8 $content\cf6 \strokec6 =<\cf8 \strokec8 $f\cf6 \strokec6 >)\cb1 \
+\cb5     \{\cb1 \
+\cb5         \cf7 \strokec7 if\cf6 \strokec6  (\cf8 \strokec8 $content\cf6 \strokec6  =~ \cf12 \strokec12 /^\cf11 \strokec11 \\s\cf12 \strokec12 *\cf7 \strokec7 $\cf12 \strokec12 /\cf6 \strokec6  )\cb1 \
+\cb5         \{\cb1 \
+\cb5         \cf7 \strokec7 next\cf6 \strokec6 ;\cb1 \
+\cb5         \}\cb1 \
+\cb5         \cf8 \strokec8 @content\cf6 \strokec6  =\cf9 \strokec9 split\cf6 \strokec6  /[^a-zA-Z]+/, \cf8 \strokec8 $content\cf6 \strokec6 ;\cb1 \
+\cb5         \cf7 \strokec7 foreach\cf6 \strokec6  \cf8 \strokec8 $c\cf6 \strokec6 (\cf8 \strokec8 @content\cf6 \strokec6 )    \cb1 \
+\cb5         \{\cb1 \
+\cb5             \cf9 \strokec9 push\cf6 \strokec6  \cf8 \strokec8 @contents\cf6 \strokec6 ,\cf8 \strokec8 $c\cf6 \strokec6 ;\cb1 \
+\cb5         \}\cb1 \
+\cb5     \}\cb1 \
+\cb5     \cf9 \strokec9 close\cf6 \strokec6  \cf8 \strokec8 $f\cf6 \strokec6 ;\cb1 \
+\
+\cb5     \cf7 \strokec7 foreach\cf6 \strokec6  \cf8 \strokec8 $file\cf6 \strokec6  (\cf9 \strokec9 glob\cf6 \strokec6  \cf10 \strokec10 "lyrics/*.txt"\cf6 \strokec6 )\cb1 \
+\cb5     \{\cb1 \
+\cb5         \cf8 \strokec8 $count\cf6 \strokec6 =0;\cb1 \
+\cb5         \cf8 \strokec8 $count1\cf6 \strokec6 =0;\cb1 \
+\cb5         \cf9 \strokec9 open\cf6 \strokec6  \cf8 \strokec8 $ff\cf6 \strokec6 , \cf10 \strokec10 '<'\cf6 \strokec6 , \cf8 \strokec8 $file\cf6 \strokec6  or \cf7 \strokec7 die\cf6 \strokec6 ;\cb1 \
+\cb5         \cf7 \strokec7 while\cf6 \strokec6 (\cf8 \strokec8 $line\cf6 \strokec6 =<\cf8 \strokec8 $ff\cf6 \strokec6 >)\cb1 \
+\cb5         \{\cb1 \
+\cb5             \cf7 \strokec7 if\cf6 \strokec6  (\cf8 \strokec8 $line\cf6 \strokec6  =~ \cf12 \strokec12 /^\cf11 \strokec11 \\s\cf12 \strokec12 *\cf7 \strokec7 $\cf12 \strokec12 /\cf6 \strokec6  )\cb1 \
+\cb5             \{\cb1 \
+\cb5                 \cf7 \strokec7 next\cf6 \strokec6 ;\cb1 \
+\cb5             \}\cb1 \
+\cb5             \cf8 \strokec8 @line\cf6 \strokec6  =\cf9 \strokec9 split\cf6 \strokec6  /[^a-zA-Z]+/, \cf8 \strokec8 $line\cf6 \strokec6 ;\cb1 \
+\cb5             \cf4 \strokec4 # print("@line\\n");\cf6 \cb1 \strokec6 \
+\cb5             \cf7 \strokec7 foreach\cf6 \strokec6  \cf8 \strokec8 $w\cf6 \strokec6 (\cf8 \strokec8 @line\cf6 \strokec6 )\cb1 \
+\cb5             \{\cb1 \
+\cb5                 \cf7 \strokec7 if\cf6 \strokec6  ( \cf8 \strokec8 $w\cf6 \strokec6  =~ \cf12 \strokec12 /^[a-zA-Z]+\cf7 \strokec7 $\cf12 \strokec12 /\cf6 \strokec6  )\cb1 \
+\cb5                 \{\cb1 \
+\cb5                     \cf8 \strokec8 $count\cf6 \strokec6 =\cf8 \strokec8 $count\cf6 \strokec6 +1;\cb1 \
+\cb5                     \cf7 \strokec7 foreach\cf6 \strokec6  \cf8 \strokec8 $c\cf6 \strokec6 (\cf8 \strokec8 @contents\cf6 \strokec6 )\cb1 \
+\cb5                     \{\cb1 \
+\cb5                         \cf7 \strokec7 if\cf6 \strokec6  ( \cf8 \strokec8 $w\cf6 \strokec6  =~ \cf12 \strokec12 /^\cf8 \strokec8 $c\cf7 \strokec7 $\cf12 \strokec12 /\cf7 \strokec7 i\cf6 \strokec6  )\cb1 \
+\cb5                         \{   \cb1 \
+\cb5                             \cf9 \strokec9 print\cf6 \strokec6 (\cf10 \strokec10 "w:\cf8 \strokec8 $w\cf10 \strokec10 ,cc:\cf8 \strokec8 $c\cf11 \strokec11 \\n\cf10 \strokec10 "\cf6 \strokec6 );\cb1 \
+\cb5                             \cf8 \strokec8 $count1\cf6 \strokec6 =\cf8 \strokec8 $count1\cf6 \strokec6 +1;\cb1 \
+\cb5                         \}\cb1 \
+\cb5                     \}\cb1 \
+\cb5                 \}\cb1 \
+\cb5             \}\cb1 \
+\cb5         \}\cb1 \
+\cb5         \cf8 \strokec8 @filename\cf6 \strokec6 =\cf9 \strokec9 split\cf6 \strokec6  /\\//, \cf8 \strokec8 $file\cf6 \strokec6 ;\cb1 \
+\cb5         \cf8 \strokec8 $s\cf6 \strokec6 =\cf8 \strokec8 $filename\cf6 \strokec6 [1];\cb1 \
+\cb5         \cf8 \strokec8 $s\cf6 \strokec6 =~ \cf9 \strokec9 s\cf12 \strokec12 /\cf11 \strokec11 \\.\\w\cf12 \strokec12 *$//\cf6 \strokec6 ;\cb1 \
+\cb5         \cf8 \strokec8 $s\cf6 \strokec6 =~ \cf9 \strokec9 s\cf12 \strokec12 /_/ /\cf7 \strokec7 g\cf6 \strokec6 ;\cb1 \
+\
+\cb5         \cf9 \strokec9 push\cf6 \strokec6  \cf8 \strokec8 @data\cf6 \strokec6 , \cf9 \strokec9 log\cf6 \strokec6 (\cf8 \strokec8 $count1\cf6 \strokec6 /\cf8 \strokec8 $count\cf6 \strokec6 );\cb1 \
+\cb5         \cf9 \strokec9 push\cf6 \strokec6  \cf8 \strokec8 @singer\cf6 \strokec6 , \cf8 \strokec8 $s\cf6 \strokec6 ;\cb1 \
+\cb5         \cf9 \strokec9 close\cf6 \strokec6  \cf8 \strokec8 $ff\cf6 \strokec6 ;\cb1 \
+\cb5     \}\cb1 \
+\cb5 \}\cb1 \
+\
+\
+\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\
+\pard\pardeftab720\sl360\partightenfactor0
+\cf13 \cb14 \strokec15 #!/usr/bin/perl -w\strokec16 \
+\
+\strokec17 foreach\strokec16  \strokec18 $file\strokec16 (\strokec18 @ARGV\strokec16 )\
+\{\
+    \strokec18 @content\strokec16 =[];\
+    \strokec19 open\strokec16  \strokec18 $f\strokec16 , \strokec20 '<'\strokec16 , \strokec18 $file\strokec16  or \strokec17 die\strokec16 ;\
+    \strokec17 while\strokec16 (\strokec18 $content\strokec16 =<\strokec18 $f\strokec16 >)   \
+    \{\
+        \strokec17 if\strokec16  (\strokec18 $content\strokec16  =~ \strokec21 /^\strokec22 \\s\strokec21 *\strokec17 $\strokec21 /\strokec16  )\
+        \{\
+        \strokec17 next\strokec16 ;\
+        \}\
+        \strokec18 @content\strokec16  =\strokec19 split\strokec16  /[^a-zA-Z]+/, \strokec18 $content\strokec16 ;\
+        \strokec17 foreach\strokec16  \strokec18 $c\strokec16 (\strokec18 @content\strokec16 )    \
+        \{\
+            \strokec18 $file\strokec16 \{\strokec18 $c\strokec16 \}=0;\
+        \}\
+    \}\
+    \strokec19 close\strokec16  \strokec18 $f\strokec16 ;\
+\
+    \strokec17 foreach\strokec16  \strokec18 $singer\strokec16  (\strokec19 glob\strokec16  \strokec20 "lyrics/*.txt"\strokec16 )\
+    \{\
+        \strokec18 $count\strokec16 =0;\
+        \strokec15 #
+\f2 \strokec15 \'bd\'ab\'c9\'cf\'c3\'e6\'b5\'c4\'b7\'c5\'b5\'bd\'d5\'e2\'c0\'ef\'c0\'b4
+\f1 \strokec16 \
+        \strokec19 open\strokec16  \strokec18 $f\strokec16 , \strokec20 '<'\strokec16 , \strokec18 $singer\strokec16  or \strokec17 die\strokec16 ;\
+        \strokec17 while\strokec16 (\strokec18 $line\strokec16 =<\strokec18 $f\strokec16 >)\
+        \{\
+            \strokec17 if\strokec16  (\strokec18 $line\strokec16  =~ \strokec21 /^\strokec22 \\s\strokec21 *\strokec17 $\strokec21 /\strokec16  )\
+            \{\
+                \strokec17 next\strokec16 ;\
+            \}\
+            \strokec18 @line\strokec16  =\strokec19 split\strokec16  /[^a-zA-Z]+/, \strokec18 $line\strokec16 ;\
+            \strokec17 foreach\strokec16  \strokec18 $w\strokec16 (\strokec18 @line\strokec16 )\
+            \{\
+                \strokec17 if\strokec16  ( \strokec18 $w\strokec16  =~ \strokec21 /^[a-zA-Z]+\strokec17 $\strokec21 /\strokec16  )\
+                \{\
+                    \strokec18 $count\strokec16 =\strokec18 $count\strokec16 +1;\
+                    \strokec17 if\strokec16  (\strokec19 exists\strokec16 (\strokec18 $file\strokec16 \{\strokec18 $w\strokec16 \}))\
+                    \{\
+                        \strokec18 $file\strokec16 \{\strokec18 $w\strokec16 \}++;\
+                    \}\
+                \}\
+            \}\
+        \}\
+        all=0\
+        \strokec17 foreach\strokec16  \strokec18 $b\strokec16 (\strokec19 keys\strokec16  \strokec18 %file\strokec16 )\
+        \{\
+            \strokec17 if\strokec16  (\strokec18 $file\strokec16 \{\strokec18 $b\strokec16 \} -\strokec19 eq\strokec16  0)\
+            \{\
+                \strokec17 next\strokec16 ;\
+            \}\
+            all=all+\strokec19 log\strokec16 (\strokec18 $file\strokec16 \{\strokec18 $b\strokec16 \}/\strokec18 $count\strokec16 );\
+        \}\
+        \strokec18 $s_data\strokec16 \{\strokec18 $singer\strokec16 \}=all\
+        \strokec19 close\strokec16  \strokec18 $f\strokec16 ;\
+    \}\
+\
+    \strokec17 foreach\strokec16  \strokec18 $data\strokec16  ( \strokec19 sort\strokec16  \{ \strokec18 $s_data\strokec16 \{\strokec18 $b\strokec16 \} <=> \strokec18 $s_data\strokec16 \{\strokec18 $a\strokec16 \} \} \strokec19 keys\strokec16  \strokec18 %s_data\strokec16  ) \
+    \{\
+    \strokec18 $value\strokec16  = \strokec18 $s_data\strokec16 \{\strokec18 $data\strokec16 \};\
+    \}\
+\
+    \strokec17 foreach\strokec16  \strokec18 $singer\strokec16 (\strokec19 keys\strokec16  \strokec18 %s_data\strokec16 )\
+    \{\
+        \strokec19 print\strokec16 (\strokec20 "\strokec18 $file\strokec20  most resembles the work of \strokec18 $singer\strokec20  (\strokec18 $s_data\strokec20 \{\strokec18 $singer\strokec20 \})"\strokec16 );\
+        \strokec17 last\strokec16 ;\
+    \}\
+\}\strokec23 \
+\pard\pardeftab720\sl360\partightenfactor0
+\cf13 \strokec23 \
+}

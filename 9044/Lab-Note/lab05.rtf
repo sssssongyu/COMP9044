@@ -1,0 +1,166 @@
+{\rtf1\ansi\ansicpg936\cocoartf2512
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fnil\fcharset0 Menlo-Regular;}
+{\colortbl;\red255\green255\blue255;\red245\green255\blue236;\red122\green37\blue30;}
+{\*\expandedcolortbl;;\cspthree\c97325\c100000\c94660;\csgenericrgb\c47826\c14510\c11688\c85000;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 1.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f1\fs30 \cf2 \cb3 \CocoaLigature0 #!/bin/sh\
+\
+i=0\
+while test -e ./.$1.$i\
+do\
+i=$((i+1))\
+done\
+ \
+while read x\
+do\
+echo $x >> .$1.$i\
+done < $1\
+\
+echo "Backup of '$1' saved as '.$1.$i'"
+\f0\fs24 \cf0 \cb1 \CocoaLigature1 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+\cf0 \
+2.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f1\fs30 \cf2 \cb3 \CocoaLigature0 #!/usr/bin/perl -w\
+\
+$i=0;\
+\
+while(-e ".$ARGV[0].$i")\{\
+$i++;\
+\}\
+\
+open $f, '<', "$ARGV[0]" or die "Cannot Open!";\
+open $in, '>>', ".$ARGV[0].$i" or die;\
+while($content=<$f>)\{\
+print $in "$content";\
+\}\
+close $in;\
+close $f;\
+\
+print "Backup of '$ARGV[0]' saved as '.$ARGV[0].$i'\\n";
+\f0\fs24 \cf0 \cb1 \CocoaLigature1 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+\cf0 \
+3.\
+\
+(1-save)\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f1\fs30 \cf2 \cb3 \CocoaLigature0 #!/bin/sh\
+\
+base_directory="$(dirname $0)"\
+\
+i=0\
+f=.snapshot\
+while true\
+do\
+if [ -d "$f.$i" ]\
+then i=$((i+1))\
+else\
+mkdir $f.$i\
+echo "Creating snapshot $i"\
+break\
+fi\
+done\
+\
+for file in *\
+do\
+if [ "$file" = "snapshot-save.sh" ]\
+then\
+continue\
+elif [ "$file" = "snapshot-load.sh" ]\
+then\
+continue\
+else\
+cp "$file" '.snapshot.'$i'/'$file''\
+fi\
+done\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 \cb1 \CocoaLigature1 \
+\
+(2-load)\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f1\fs30 \cf2 \cb3 \CocoaLigature0 #!/bin/dash\
+\
+i=0\
+f=.snapshot\
+while true\
+do\
+if [ -d "$f.$i" ]\
+then i=$((i+1))\
+else\
+mkdir $f.$i\
+echo "Creating snapshot $i"\
+break\
+fi\
+done\
+\
+for file in *\
+do\
+if [ "$file" = "snapshot-save.sh" ]\
+then\
+continue\
+elif [ "$file" = "snapshot-load.sh" ]\
+then\
+continue\
+else\
+cp "$file" '.snapshot.'$i'/'$file''\
+cp '.snapshot.'$1'/'$file'' "$file"\
+fi\
+done\
+echo "Restoring snapshot $1"
+\f0\fs24 \cf0 \cb1 \CocoaLigature1 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+\cf0 \
+4.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f1\fs30 \cf2 \cb3 \CocoaLigature0 #!/usr/bin/perl -w\
+use File::Copy;\
+\
+$i=0;\
+\
+while(-e ".snapshot.$i")\{\
+$i++;\
+\}\
+mkdir ".snapshot.$i";\
+\
+@files= glob "*";\
+\
+foreach $file(@files)\
+\{\
+if ($file ne "snapshot.pl")\
+\{\
+copy("$file",".snapshot.$i/$file");\
+if ($#ARGV==1)\
+\{\
+copy(".snapshot.$ARGV[1]/$file","$file");\
+\}\
+\}\
+\}\
+\
+print "Creating snapshot $i\\n";\
+if ($#ARGV==1)\
+\{\
+print "Restoring snapshot $ARGV[1]\\n";\
+\}\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 \cb1 \CocoaLigature1 \
+\
+5.\
+}

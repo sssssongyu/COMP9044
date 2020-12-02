@@ -1,0 +1,49 @@
+#!/bin/dash
+
+#no index
+#shrug-show: error: unknown commit '0'
+
+if [ ! -d .shrug ]; then
+    echo "shrug-show: error: no .shrug directory containing shrug repository exists"
+    exit
+fi
+
+if echo $1 | egrep -q ":"; then
+    version=$(echo $1 | cut -d':' -f1)
+    filename=$(echo $1 | cut -d':' -f2)
+
+    if echo $1 | cut -d':' -f1 | egrep -q ^[0-9]+$; then
+        if [ ! -d ".shrug/commit$version" ]; then
+            echo "shrug-show: error: unknown commit '$version'"
+
+        elif [ ! -f ".shrug/commit$version/$filename" ]; then
+            echo "shrug-show: error: '$filename' not found in commit $version"
+
+        else
+            files=$(ls .shrug/commit$version)
+            for file in $files; do
+                if [ "$file" = "$filename" ]; then
+                    cat ".shrug/commit$version/$file"
+                fi
+            done
+        fi
+
+    elif echo $1 | cut -d':' -f1 | egrep -q ^$; then
+        if [ ! -f ".shrug/index/$filename" ]; then
+            echo "shrug-show: error: '$filename' not found in index"
+        else
+            files=$(ls .shrug/index)
+            for file in $files; do
+                if [ "$file" = "$filename" ]; then
+                    cat ".shrug/index/$file"
+                fi
+            done
+        fi
+    else
+        wrong=$(echo $1 | cut -d':' -f1)
+        echo "shrug-show: error: unknown commit '$wrong'"
+    fi
+
+else
+    echo shrug-show: error: invalid object $1
+fi

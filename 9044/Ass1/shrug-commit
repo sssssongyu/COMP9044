@@ -1,0 +1,74 @@
+#!/bin/dash
+
+if [ $# -lt 2 ]; then
+	echo "usage: shrug-commit [-a] -m commit-message"
+	exit
+
+elif [ "$1" = "-a" -a "$2" = "-m" -a "$3" != "" ]; then
+
+	if [ ! -d ".shrug/index" ]; then
+		echo "nothing to commit"
+		exiy
+
+	else
+		message="$3"
+		indexfiles=$(ls .shrug/index/)
+		for file in $indexfiles; do
+			file=$(echo $file | cut -d'/' -f3)
+			cp "$file" ".shrug/index/$file"
+		done
+	fi
+
+elif
+	[ "$1" = "-m" -a "$2" != "" ]
+then
+	message="$2"
+
+else
+	echo "usage: shrug-commit [-a] -m commit-message"
+	exit
+fi
+
+if test "$message" != ""; then
+
+	if [ ! -d ".shrug/index" ]; then
+		echo "nothing to commit"
+		exit
+
+	else
+		code=0
+		now=1
+		if [ ! -f ".shrug/commit" ]; then
+			echo "0 $message" >.shrug/commit
+			code=1
+			now=0
+
+		else
+			commitline=$(wc -l <.shrug/commit)
+			cmdic=$(diff ".shrug/commit$((commitline - 1))/" ".shrug/index/")
+			if test "$cmdic" != ""; then
+				code=1
+			fi
+		fi
+
+		if [ $code -eq 1 ]; then
+			i=$(wc -l <.shrug/commit)
+			if [ $now -eq 1 ]; then
+				echo "$((i)) $message" >>.shrug/commit
+			fi
+			z=$(wc -l <.shrug/commit)
+			echo Committed as commit $((z - 1))
+			mkdir ".shrug/commit$((z - 1))"
+
+			files=$(ls .shrug/index)
+			for file in $files; do
+				cp ".shrug/index/$file" ".shrug/commit$((z - 1))/$file"
+			done
+
+		elif [ $code -eq 0 ]; then
+			echo "nothing to commit"
+
+		fi
+	fi
+
+fi

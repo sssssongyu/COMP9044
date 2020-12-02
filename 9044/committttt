@@ -1,0 +1,64 @@
+#!/bin/dash
+
+if [ ! -d ".shrug/index" ]; then
+	echo "There is no index directory"
+
+elif [ "$#" -ne 2 ]; then
+	echo "Two arguments please"
+
+else
+	code=0
+	now=1
+	if [ ! -f ".shrug/commit" ]; then
+		echo "0 $2" >.shrug/commit
+		code=1
+		now=0
+
+	else
+		j=$(wc -l < .shrug/commit)
+		indexnum=$(find ./.shrug/index -type f | wc -l)
+		lastcommitnum=$(find ./.shrug/commit$((j - 1)) -type f | wc -l)
+		if test "$indexnum" -eq "$lastcommitnum"; then
+			indexfiles=$(ls .shrug/index/)
+			lastfiles=$(ls .shrug/commit$((j - 1))/)
+			if test "$indexfiles" = "$lastfiles"; then
+				for indexfile in $indexfiles; do
+					for lastfile in $lastfiles; do
+						if test "$indexfile" = "$lastfile"; then
+							cmp=$(diff ".shrug/commit$((j - 1))/$lastfile" ".shrug/index/$indexfile")
+							if test "$cmp" != ""; then
+								code=1
+							fi
+						fi
+					done
+				done
+			else
+				code=1
+			fi
+		else
+			code=1
+		fi
+	fi
+
+	if [ $code -eq 1 ]; then
+		i=$(wc -l <.shrug/commit)
+		if [ $now -eq 1 ]; then
+			echo "$((i)) $2" >>.shrug/commit
+		fi
+		z=$(wc -l <.shrug/commit)
+		z=$(echo $z | sed 's/\t //g')
+		echo Committed as commit $((z - 1))
+		mkdir ".shrug/commit$((z-1))"
+
+		files=`ls .shrug/index`
+		for file in $files
+		do
+		cp ".shrug/index/$file" ".shrug/commit$((z-1))/$file"
+		done
+
+
+	else
+		echo "Donot need to commit again"
+
+	fi
+fi

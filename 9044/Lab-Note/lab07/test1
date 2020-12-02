@@ -1,0 +1,66 @@
+#!/usr/bin/perl -w
+
+foreach $file(@ARGV)
+{
+    foreach $singer (glob "lyrics/*.txt")
+    {
+        $count=0;
+        open $f, '<', $singer or die;
+        while($line=<$f>)
+        {
+            if ($line =~ /^\s*$/ )
+            {
+                next;
+            }
+            @line =split /[^a-zA-Z]+/, $line;
+            foreach $w(@line)
+            {
+                if ( $w =~ /^[a-zA-Z]+$/ )
+                {
+                    $w =~ tr/A-Z/a-z/;
+                    $count=$count+1;
+                    if (exists($singer{$w}))
+                    {
+                        $singer{$w}++;
+                    }
+                    else
+                    {   
+                        $singer{$w}=1;
+                    }
+                }
+            }
+        }
+
+        @content=[];
+        $all=0;
+        open $f, '<', $file or die;
+        while($content=<$f>)   
+        {
+            if ($content =~ /^\s*$/ )
+            {
+            next;
+            }
+            @content =split /[^a-zA-Z]+/, $content;
+            foreach $c(@content)    
+            {
+                $c =~ tr/A-Z/a-z/;
+                if(exists($singer{$c}))
+                {
+                    $all=$all+log($singer{$c}/$count);
+                }
+                else{
+                    $all=$all+log(1/$count);
+                }
+            }
+        }
+        $file{$singer}=$all;
+    }
+
+    foreach $data ( sort { $file{$a} <=> $file{$b} } keys %file ) 
+    {
+       print("$file most resembles the work of $data ($file{$data})\n");
+        last;
+    }
+
+
+}

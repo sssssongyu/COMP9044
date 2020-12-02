@@ -1,0 +1,43 @@
+#!/bin/dash
+
+if [ ! -f ".shrug/commit" ]; then
+    echo "shrug-branch: error: your repository does not have any commits yet"
+    exit
+fi
+
+if [ ! -f ".shrug/branch" ]; then
+    echo master > .shrug/branch
+    mkdir master
+fi
+
+if [ $# -eq 0 ]; then
+    cat .shrug/branch | sort
+
+elif echo $1 | egrep -q "^-d$"; then
+    if [ "$2" = "master" ]; then
+        echo "shrug-branch: error: can not delete branch 'master'"
+        exit
+    elif [ -d "$2" ]; then
+        rm -rf "$2"
+        echo "Deleted branch '$2'"
+        sed -e '/master/d' .shrug/branch > .shrug/branch1
+        cp "branch1" "branch"
+        cat branch | sort
+        rm branch1
+        exit
+    else
+        echo "shrug-branch: error: branch '$2' does not exist"
+        exit
+    fi
+
+elif echo $1 | egrep -q "^[0-9a-zA-Z]*$"; then
+    if [ "$1" = "master" ]; then
+        echo "shrug-branch: error: branch 'master' already exists"
+    else
+        mkdir $1
+        echo $1>> .shrug/branch
+    fi
+else
+    echo "usage: shrug-branch [-d] <branch>"
+
+fi
